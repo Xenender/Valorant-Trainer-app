@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:valorant_trainer/animations/FadePageRoute.dart';
+import 'package:valorant_trainer/animations/SlideFadePageRoute.dart';
 import 'package:valorant_trainer/hub/TrainDescription.dart';
+import 'package:valorant_trainer/hub/TrainListePage.dart';
 import 'package:valorant_trainer/statics/Training.dart';
 
 import '../animations/ScrollBehavior1.dart';
+import '../global/GlobalVariable.dart';
 import '../statics/Player.dart';
 
 import '../statics/Ranks.dart';
@@ -104,7 +108,9 @@ class _TrainPageState extends State<TrainPage> {
                     ),
 
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(height: 20,),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 50),child: Divider()),
+                  SizedBox(height: 20,),
 
                   Text("Mon programme",style: TextStyle(fontSize: 30,fontFamily: "Valorant"),),
 
@@ -207,6 +213,26 @@ class _TrainPageState extends State<TrainPage> {
 
                     ],
                   )
+                  ,
+                  SizedBox(height: 20,),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 50),child: Divider()),
+                  SizedBox(height: 20,),
+                  Text("Catalogue",style: TextStyle(fontSize: 30,fontFamily: "Valorant"),),
+                  SizedBox(height: 20,),
+
+                  Padding(padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),child: Row(mainAxisAlignment: MainAxisAlignment.start,children: [Text("Par catégories",style: TextStyle(fontSize: 20),)],))
+                  ,
+
+
+                  buildScrollItemByListCategory(),
+
+                  SizedBox(height: 20,),
+
+                  Padding(padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),child: Row(mainAxisAlignment: MainAxisAlignment.start,children: [Text("Par difficultés",style: TextStyle(fontSize: 20),)],))
+                  ,
+
+                  buildScrollItemByListDifficulty()
+
 
                 ],
               ),
@@ -277,12 +303,13 @@ class _TrainPageState extends State<TrainPage> {
               ),
               isScrollControlled: true,
               builder: (context) {
+                GlobalVariable.toolContext = context;
                 return ScrollConfiguration(
                   behavior: ScrollBehavior1(),
                   child: TrainDescription(trainingInfo,player,numeroTraining),
                 );
               },
-            );
+            ).then((value) => GlobalVariable.toolContext=null);
 
           },
 
@@ -358,6 +385,117 @@ Column buildPointsFaibles(){
     children: widgetsColumn,
   );
 }
+
+SingleChildScrollView buildScrollItemByListCategory(){
+
+    List<List<String>> liste = typeList;
+
+    List<Widget> elements = [];
+
+    liste.asMap().forEach((index,element) {
+      elements.add(
+
+        GestureDetector(
+          onTap: (){
+            print("Vous avez appuyé sur l'élément à l'index $index");
+
+            GlobalVariable.toolContext = context;
+
+            Navigator.push(
+              context,
+              SlideFadePageRoute(page:TrainListePage("cat",liste[index][0])),
+            ).then((value) => GlobalVariable.toolContext=null);
+
+          },
+          child:  Padding(padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Container(
+              height: 200,
+              width: 160,
+              decoration: BoxDecoration(
+                  color: Color(0xFFF2994B),
+                  borderRadius: BorderRadius.circular(10)
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(element[1],scale:3,),
+                  Text(element[0],style: TextStyle(fontSize: 17),textAlign: TextAlign.center,)
+                ],
+              ),
+            ),
+          ),
+        )
+
+
+      );
+    });
+
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child:
+      Padding(padding: EdgeInsets.symmetric(horizontal: 10),child:Row(
+        children: elements
+      ) ,)
+      ,
+    );
+}
+
+
+  SingleChildScrollView buildScrollItemByListDifficulty(){
+
+    List<List<String>> liste = difficulyList;
+
+    List<Widget> elements = [];
+
+    liste.asMap().forEach((index,element) {
+      elements.add(
+
+        GestureDetector(
+          onTap: (){
+
+            print("Vous avez appuyé sur l'élément à l'index $index");
+            GlobalVariable.toolContext = context;
+
+
+            Navigator.of(context).push(SlideFadePageRoute(page:TrainListePage("dif",liste[index][0]))).then((value) => GlobalVariable.toolContext=null);
+
+
+          },
+          child: Padding(padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Container(
+              height: 200,
+              width: 160,
+              decoration: BoxDecoration(
+                  color: Color(0xFFF27A5E),
+                  borderRadius: BorderRadius.circular(10)
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(element[1],scale:3,),
+                  Text(element[0],style: TextStyle(fontSize: 17),textAlign: TextAlign.center,)
+                ],
+              ),
+            ),
+          ),
+        )
+
+
+      );
+    });
+
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child:
+      Padding(padding: EdgeInsets.symmetric(horizontal: 10),child:Row(
+          children: elements
+      ) ,)
+      ,
+    );
+  }
+
 }
 
 

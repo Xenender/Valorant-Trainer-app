@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:valorant_trainer/home/GoalPage.dart';
+import '../animations/SlideFadePageRoute.dart';
 import '../animations/SlidePageRoute.dart';
 import '../statics/Player.dart';
 import '../statics/Ranks.dart' as ranks;
@@ -56,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
                       Navigator.push(
                         context,
-                        SlidePageRoute(page:GoalPage(player)),
+                        SlideFadePageRoute(page:GoalPage(player)),
                       );
 
                     }, child: Text("Suivant"),

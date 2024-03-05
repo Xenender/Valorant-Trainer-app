@@ -13,6 +13,7 @@ class TrainDescription extends StatefulWidget {
   TrainDescription(this.trainingInfo,this.player,this.numeroTraining);
 
 
+
   @override
   _TrainDescriptionState createState() => _TrainDescriptionState(trainingInfo,player,numeroTraining);
 
@@ -49,7 +50,7 @@ class _TrainDescriptionState extends State<TrainDescription> {
 
                       Text("${trainingInfo!.titre}",style: TextStyle(fontSize: 22,fontFamily: "Valorant"),textAlign: TextAlign.center,),
                       SizedBox(height: 10,),
-                      Text("Durée - ${player!.entrainement![numeroTraining!][1]}min",style: TextStyle(fontSize: 19)),
+                      numeroTraining!=null ? Text("Durée - ${player!.entrainement![numeroTraining!][1]}min",style: TextStyle(fontSize: 19)) : Container(),
                       SizedBox(height: 10,),
                       Text("Lieu - ${trainingInfo!.lieu}",style: TextStyle(fontSize: 18)),
                       SizedBox(height: 10,),

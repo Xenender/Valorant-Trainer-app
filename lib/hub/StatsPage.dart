@@ -130,10 +130,16 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
           body:
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.only(top: 80,right: 50,left: 20,bottom: 100),
+              padding: EdgeInsets.only(top: 80,right: 10,left: 10,bottom: 100),
               child:
               Column(
                 children: [
+
+                  Text("statistiques",style: TextStyle(fontSize: 30,fontFamily: "Valorant"),textAlign: TextAlign.center,),
+
+                  SizedBox(height: 20,),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 50),child: Divider()),
+                  SizedBox(height: 20,) ,
                   Container(
                     height: 0,
                     width: MediaQuery.of(context).size.width,
@@ -263,8 +269,39 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                     ],
                   )
 
+                  ,
 
+                  SizedBox(height: 30,)
 
+                  ,
+                  Padding(padding: EdgeInsets.all(10)
+                    ,child:  Container(
+                      padding: EdgeInsets.all(5),
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(border: Border.all(color: Colors.white)),
+                      child: ElevatedButton(
+
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                (Set<MaterialState> states) {
+
+                              return Color(0xFF52907E); // Use the component's default.
+                            },
+                          ),
+                        ),
+
+                        onPressed: (){
+
+                          final snackBar = SnackBar(
+                            content: Text('Non implémenté'),
+                            duration: Duration(seconds: 2), // Durée du message
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                        }, child: Text("Modifier"),
+
+                      ),
+                    ),)
 
 
                 ],

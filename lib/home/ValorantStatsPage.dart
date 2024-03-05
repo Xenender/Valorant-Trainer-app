@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:valorant_trainer/home/AgentChoosePage.dart';
 
+import '../animations/SlideFadePageRoute.dart';
 import '../animations/SlidePageRoute.dart';
 import '../statics/Player.dart';
 
@@ -136,7 +137,7 @@ class _ValorantStatsPageState extends State<ValorantStatsPage> {
 
                           Navigator.push(
                             context,
-                            SlidePageRoute(page: AgentSelectionPage(player)),
+                            SlideFadePageRoute(page: AgentSelectionPage(player)),
                           );
                         }
                       },

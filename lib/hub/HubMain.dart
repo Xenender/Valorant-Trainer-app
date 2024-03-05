@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:valorant_trainer/global/GlobalVariable.dart';
 
 import '../animations/ScrollBehavior1.dart';
 import '../statics/Player.dart';
@@ -87,7 +88,9 @@ class _HubMainState extends State<HubMain> {
                       ),
                     ),
 
-                    SizedBox(height: 20,),
+                    SizedBox(height: 15,),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 50),child: Divider()),
+                    SizedBox(height: 15,),
 
                     buildJourEntrainement(player.dayActu!,trainingList[player.entrainement![player.dayActu!][0]]!, player),
 
@@ -187,12 +190,15 @@ class _HubMainState extends State<HubMain> {
               ),
               isScrollControlled: true,
               builder: (context) {
+
+                GlobalVariable.toolContext = context;
+
                 return ScrollConfiguration(
                   behavior: ScrollBehavior1(),
                   child: TrainDescription(trainingInfo,player,numeroTraining),
                 );
               },
-            );
+            ).then((value) => GlobalVariable.toolContext=null);
 
           },
 

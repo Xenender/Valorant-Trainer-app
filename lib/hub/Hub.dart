@@ -1,9 +1,6 @@
-
 import 'package:flutter/material.dart';
+import 'package:valorant_trainer/global/GlobalVariable.dart';
 
-import 'dart:io';
-
-import 'package:valorant_trainer/home/HomePage.dart';
 import 'package:valorant_trainer/hub/HubMain.dart';
 import 'package:valorant_trainer/hub/StatsPage.dart';
 import 'package:valorant_trainer/hub/ToolsPage.dart';
@@ -30,6 +27,23 @@ class _HubState extends State<Hub>{
   ];
 
   void _onItemTapped(int index) {
+
+
+    try{
+      if(GlobalVariable.toolContext2 != null){
+        Navigator.of(GlobalVariable.toolContext2!).pop();
+        GlobalVariable.toolContext2 = null;
+      }
+
+      if(GlobalVariable.toolContext != null){
+        Navigator.of(GlobalVariable.toolContext!).pop();
+        GlobalVariable.toolContext = null;
+      }
+    }
+    catch (e) {
+      print(e);
+    }
+
     setState(() {
 
       _nav_selected_index = index;
@@ -58,9 +72,9 @@ class _HubState extends State<Hub>{
             child: BottomNavigationBar(
 
               items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(icon: Icon(Icons.home),label: "Home"),
-                BottomNavigationBarItem(icon: Icon(Icons.fitness_center),label: "Entrainement"),
-                BottomNavigationBarItem(icon: Icon(Icons.trending_up),label: "Statistiques"),
+                BottomNavigationBarItem(icon: Icon(Icons.home),label: "Acceuil"),
+                BottomNavigationBarItem(icon: Icon(Icons.fitness_center),label: "Entraînement"),
+                BottomNavigationBarItem(icon: Icon(Icons.trending_up),label: "Progrès"),
                 BottomNavigationBarItem(icon: Icon(Icons.settings),label: "Paramètres")
               ],
               currentIndex: _nav_selected_index,
@@ -76,6 +90,7 @@ class _HubState extends State<Hub>{
 
       body: Navigator(
         onGenerateRoute: (settings) {
+
           return MaterialPageRoute(
             builder: (context) => _widgetOptions[_nav_selected_index],
           );
@@ -84,5 +99,16 @@ class _HubState extends State<Hub>{
 
 
     );
+  }
+  bool _isOverlayRoutePresent(BuildContext context) {
+    NavigatorState navigator = Navigator.of(context);
+    bool isOverlayRoutePresent = false;
+    navigator.popUntil((route) {
+      if (!route.isFirst) {
+        isOverlayRoutePresent = true;
+      }
+      return true;
+    });
+    return isOverlayRoutePresent;
   }
 }

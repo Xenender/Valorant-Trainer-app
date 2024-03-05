@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:valorant_trainer/animations/SlidePageRoute.dart';
+import '../animations/SlideFadePageRoute.dart';
 import '../statics/Player.dart';
 import '../statics/Ranks.dart' as ranks;
 import 'ValorantStatsPage.dart';
@@ -73,7 +74,7 @@ class _GoalPageState extends State<GoalPage> {
                       player.rankGoal = indexChoose;
 
                       print("${player.rankActu} |  ${player.rankGoal}");
-                      Navigator.push(context, SlidePageRoute(page: ValorantStatsPage(player)));
+                      Navigator.push(context, SlideFadePageRoute(page: ValorantStatsPage(player)));
 
                     }, child: Text("Suivant"),
 

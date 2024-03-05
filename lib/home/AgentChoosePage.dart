@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:valorant_trainer/home/TimeChoosePage.dart';
+import '../animations/SlideFadePageRoute.dart';
 import '../animations/SlidePageRoute.dart';
 import '../statics/Agents.dart';
 import '../statics/Player.dart';
@@ -81,7 +82,7 @@ class _AgentSelectionPageState extends State<AgentSelectionPage> {
 
                   Navigator.push(
                     context,
-                    SlidePageRoute(page:TimeChoosePage(player)),
+                    SlideFadePageRoute(page:TimeChoosePage(player)),
                   );
                 }
                 else{
