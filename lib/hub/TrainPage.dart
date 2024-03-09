@@ -5,6 +5,7 @@ import 'package:valorant_trainer/animations/FadePageRoute.dart';
 import 'package:valorant_trainer/animations/SlideFadePageRoute.dart';
 import 'package:valorant_trainer/hub/TrainDescription.dart';
 import 'package:valorant_trainer/hub/TrainListePage.dart';
+import 'package:valorant_trainer/statics/BoutonValorant.dart';
 import 'package:valorant_trainer/statics/Training.dart';
 
 import '../animations/ScrollBehavior1.dart';
@@ -76,6 +77,7 @@ class _TrainPageState extends State<TrainPage> {
 
   }
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -125,51 +127,30 @@ class _TrainPageState extends State<TrainPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
 
-                      GestureDetector(
-                        onTap: (){
+                      BoutonValorant(
+                          text: "Semaine précédente",
+                          onTap: (){
 
-                          int maxSemaine = player!.dayBeforeGoal! ~/ player!.joursSemaine!;
-                          int newSemaine = semaineActuelle + -1;
-                          if(newSemaine >=0){
-                            setState(() {
-                              semaineActuelle = newSemaine;
-                            });
+                            int maxSemaine = player!.dayBeforeGoal! ~/ player!.joursSemaine!;
+                            int newSemaine = semaineActuelle + -1;
+                            if(newSemaine >=0){
+                              setState(() {
+                                semaineActuelle = newSemaine;
+                              });
+                            }
                           }
+                          ,
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15
+                        ),
+                        width: 150,
 
-                        },
-                        child: Padding(padding: EdgeInsets.all(10),
-                          child:
-                          Container(
-                            width: 150,
-                            color: Color(0xFFFD4554),
-                            child: Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child:
-                                Container(
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Color(0xCDFFFFFF))),
-                                  child:  Text(
-                                    "Semaine précédente",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                )
-
-
-                            ),
                       )
-
-                      ,
-                        )
-                        ,),
-
-
-                      GestureDetector(
+,
+                      BoutonValorant(
+                        text: "Semaine suivante",
                         onTap: (){
-
                           int maxSemaine = player!.dayBeforeGoal! ~/ player!.joursSemaine!;
                           int newSemaine = semaineActuelle + 1;
                           if(newSemaine <= maxSemaine){
@@ -177,37 +158,17 @@ class _TrainPageState extends State<TrainPage> {
                               semaineActuelle = newSemaine;
                             });
                           }
-
-
-                        },
-                        child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Container(
-                              width: 150,
-                              color: Color(0xFF52907E),
-                              child: Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child:
-                                Container(
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Color(0xCDFFFFFF))),
-                                  child:  Text(
-                                    "Semaine suivante",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                      )
-
-
-
-
+                        }
+                        ,
+                        textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15
                         ),
+                        width: 150,
+                        color: Color(0xFF52907E),
+
                       )
+                      ,
 
 
 
@@ -224,7 +185,7 @@ class _TrainPageState extends State<TrainPage> {
                   ,
 
 
-                  buildScrollItemByListCategory(),
+                    buildScrollItemByListCategory(),
 
                   SizedBox(height: 20,),
 
@@ -278,10 +239,12 @@ class _TrainPageState extends State<TrainPage> {
 
   Column buildJourEntrainement(int numeroTraining,TrainingInfo trainingInfo,Player player){
 
-    List<Color> colors = [Color(0xFF0596F2),Color(0xFFF2994B),Color(0xFFF27A5E),Color(0xFFF24949),Color(0xFFF24949),Color(0xFFF24949),Color(0xFFF24949)];
+    List<Color> colors = [Color(0xFF5EBEF2),Color(0xFFF2C35E),Color(0xFFF27A5E),Color(
+        0xFFF24949),Color(0xFFF25EE6),Color(0xFFBC5EF2),Color(
+        0xFF6D5EF2)];
 
 
-
+    String linkImageType = typeToShow(trainingInfo.type);
 
     return Column(
       children: [
@@ -314,8 +277,7 @@ class _TrainPageState extends State<TrainPage> {
           },
 
           child: Container(
-            padding: EdgeInsets.only(top: 20,bottom:0),
-            height: 200,
+            padding: EdgeInsets.only(top: 20,bottom:20),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: colors[numeroTraining % player.joursSemaine!],
@@ -326,7 +288,37 @@ class _TrainPageState extends State<TrainPage> {
                 Text("${trainingInfo.titre}",style: TextStyle(fontSize: 22,fontFamily: "Valorant"),textAlign: TextAlign.center,),
                 Text("Durée - ${player.entrainement![numeroTraining][1]}min",style: TextStyle(fontSize: 19)),
                 Text("Lieu - ${trainingInfo.lieu}",style: TextStyle(fontSize: 18)),
-                Image.asset("${trainingInfo.image}",scale: 3.5,)
+                SizedBox(height: 20,),
+                Image.asset("assets/types/${linkImageType}.png",scale: 6,color: Colors.white,)
+                /*
+
+                ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+
+                child:
+                    Container(
+    child:
+    ClipRRect(
+      borderRadius: BorderRadius.circular(8.0),
+
+      child: Image.asset("${trainingInfo.image}",fit: BoxFit.cover,
+        width: 150.0,
+        height: 100.0,
+
+      ) ,
+    )
+    ,
+    decoration: BoxDecoration(
+    border: Border.all(width: 10,color: Color(0xFF0F1923)),
+      color: Color(0xFF0F1923)
+    ),
+    )
+                 ,
+
+                )
+
+                */
+
               ],
             ),
           ),
@@ -412,13 +404,14 @@ SingleChildScrollView buildScrollItemByListCategory(){
               height: 200,
               width: 160,
               decoration: BoxDecoration(
-                  color: Color(0xFFF2994B),
+                  color: Color(0xFF52907E),
                   borderRadius: BorderRadius.circular(10)
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(element[1],scale:3,),
+                  Image.asset(element[1],scale:4.5,color: Colors.white,),
+                  SizedBox(height: 10,),
                   Text(element[0],style: TextStyle(fontSize: 17),textAlign: TextAlign.center,)
                 ],
               ),
@@ -467,7 +460,7 @@ SingleChildScrollView buildScrollItemByListCategory(){
               height: 200,
               width: 160,
               decoration: BoxDecoration(
-                  color: Color(0xFFF27A5E),
+                  color: Color(0xFFFD4554),
                   borderRadius: BorderRadius.circular(10)
               ),
               child: Column(
@@ -575,6 +568,9 @@ class PointFaibleItem extends StatelessWidget {
 
     ;
   }
+
+
+
 }
 
 

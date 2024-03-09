@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:valorant_trainer/home/GoalPage.dart';
 import '../animations/SlideFadePageRoute.dart';
 import '../animations/SlidePageRoute.dart';
+import '../statics/BoutonValorant.dart';
 import '../statics/Player.dart';
 import '../statics/Ranks.dart' as ranks;
+
 
 /*
 recuperation rank actuel
@@ -15,67 +17,105 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-
 class _HomePageState extends State<HomePage> {
-
   int indexChoose = 0;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: indexChoose);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
         body: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 20),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                 SizedBox(height: 30),
-                Text("Quel est votre rank ?",style: TextStyle(fontSize: 30),textAlign: TextAlign.center,),
-                Expanded(
-                  child: PageView.builder(
-                    itemCount: ranks.rankList.length-1,
-                    itemBuilder: (context, index) {
-                      return ImageView(ranks.rankList[index]!);
-                    },
-                    onPageChanged: (index){
+            Text(
+              "Quel est votre rank ?",
+              style: TextStyle(fontSize: 30),
+              textAlign: TextAlign.center,
+            ),
+            Expanded(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                  PageView.builder(
+                  controller: _pageController,
+                  itemCount: ranks.rankList.length - 1,
+                  itemBuilder: (context, index) {
+                    return ImageView(ranks.rankList[index]!);
+                  },
+                  onPageChanged: (index) {
+                    setState(() {
                       indexChoose = index;
-                    },
-                  ),
+                    });
+                  },
                 ),
-                Padding(padding: EdgeInsets.all(10)
-                ,child:  Container(
-                    padding: EdgeInsets.all(5),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-                    child: ElevatedButton(onPressed: (){
+                Positioned(
+                    left: 20,
+                    child: (indexChoose > 0) ?
+                IconButton(
+                onPressed: () {
+          _pageController.previousPage(
+          duration: Duration(milliseconds: 500),
+          curve: Curves.ease);
+          },
+            icon: Icon(Icons.arrow_left,size: 40,),
+          ):Container(),
+        ),
+        Positioned(
+            right: 20,
+            child: (indexChoose < ranks.rankList.length - 2) ?
+        IconButton(
+        onPressed: () {
+      _pageController.nextPage(
+          duration: Duration(milliseconds: 500),
+          curve: Curves.ease);
+    },
+    icon: Icon(Icons.arrow_right,size: 40,),
+    ):Container(),
+    ),
+    ],
+    ),
+    ),
+
+                  BoutonValorant(
+                    onTap: () {
 
                       print(indexChoose);
-
                       Player player = Player(rankActu: indexChoose);
-
                       Navigator.push(
                         context,
-                        SlideFadePageRoute(page:GoalPage(player)),
+                        SlideFadePageRoute(page: GoalPage(player)),
                       );
 
-                    }, child: Text("Suivant"),
+                    },
+                    text: "Suivant",
+                    width: MediaQuery.of(context).size.width,
 
-                    ),
-                  ),)
-
-
-
-              ],
-            ),
-          )
-
-        ),
-      );
-
+                  )
+    ],
+    ),
+    ),
+    ),
+    );
   }
 }
+
+
 
 
 class ImageView extends StatelessWidget {

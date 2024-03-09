@@ -125,12 +125,16 @@ class TrainingListItem extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Image.asset(
-                trainingInfo.image, // Chemin vers l'image de l'entrainement
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
-              ),
+          ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+            child: Image.asset(
+              trainingInfo.image, // Chemin vers l'image de l'entrainement
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+            ),
+          ),
+
               SizedBox(width: 10),
               Expanded(
                 child: Column(

@@ -4,6 +4,7 @@ import 'package:valorant_trainer/animations/TransitionPage.dart';
 import 'package:valorant_trainer/statics/TrainBuilder.dart';
 
 import 'dart:math';
+import '../statics/BoutonValorant.dart';
 import '../statics/Player.dart';
 
 /*
@@ -81,106 +82,106 @@ class _TimeChoosePageState extends State<TimeChoosePage> {
             ),
             SizedBox(height: 20),
 
-            Padding(padding: EdgeInsets.all(10)
-              ,child:  Container(
-                padding: EdgeInsets.all(5),
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-                child: ElevatedButton(onPressed: (){
-                  // Vous pouvez utiliser daysPerWeek et timePerDay ici
-                  print('Jours par semaine: ${daysPerWeek+1}');
-                  print('Temps par jour: ${timePerDay/2} heures');
 
-                  player.joursSemaine = daysPerWeek+1;
-                  player.heureJours = timePerDay/2;
+            BoutonValorant(
+              onTap: () {
 
-                  TrainBuilder trainBuilder = TrainBuilder(player);
+                print('Jours par semaine: ${daysPerWeek+1}');
+                print('Temps par jour: ${timePerDay/2} heures');
 
-                  List<List<String>> qualityWeakness = trainBuilder.createQualityWeakness();
-                  player.quality = qualityWeakness[0];
-                  player.weakness = qualityWeakness[1];
+                player.joursSemaine = daysPerWeek+1;
+                player.heureJours = timePerDay/2;
 
-                  int rankToPass = player.rankGoal! - player.rankActu!;
-                  print("aeae");
-                  print(player.rankGoal);
-                  print(player.rankActu);
-                  int pointToHave = rankToPass * 100;
-                  int nbGameWinToHave = (pointToHave ~/ 20);
+                TrainBuilder trainBuilder = TrainBuilder(player);
 
-                  print("win to have");
+                List<List<String>> qualityWeakness = trainBuilder.createQualityWeakness();
+                player.quality = qualityWeakness[0];
+                player.weakness = qualityWeakness[1];
 
-                  print(nbGameWinToHave);
+                int rankToPass = player.rankGoal! - player.rankActu!;
+                print("aeae");
+                print(player.rankGoal);
+                print(player.rankActu);
+                int pointToHave = rankToPass * 100;
+                int nbGameWinToHave = (pointToHave ~/ 20);
 
-                  player.dayBeforeGoal = nbGameWinToHave;
-                  player.dayActu = 0;
+                print("win to have");
 
-                  List<int> entrainement = trainBuilder.createEntrainement();
+                print(nbGameWinToHave);
 
-                  int dureeTrain = 0;
-                  if(player.heureJours! > 13){
-                    dureeTrain = 120;
+                player.dayBeforeGoal = nbGameWinToHave;
+                player.dayActu = 0;
+
+                List<int> entrainement = trainBuilder.createEntrainement();
+
+                int dureeTrain = 0;
+                if(player.heureJours! > 13){
+                  dureeTrain = 120;
+                }
+                else if(player.heureJours! > 9){
+                  dureeTrain = 60;
+                }
+                else if(player.heureJours! > 5){
+                  dureeTrain = 30;
+                }
+                else if(player.heureJours! > 0){
+                  dureeTrain = 15;
+                }
+
+                print("duree train");
+                print(dureeTrain);
+                List<List<int>> entrainementDuree = [];
+
+                Random random = Random();
+
+                int vraiDuree = 0;
+                entrainement.forEach((element) {
+                  int indexAleatoire = random.nextInt(3);
+                  vraiDuree = dureeTrain;
+                  print("index alea");
+                  print(indexAleatoire);
+                  if(indexAleatoire == 0){
+                    vraiDuree = vraiDuree - 15;
+                    print("passage 0");
                   }
-                  else if(player.heureJours! > 9){
-                    dureeTrain = 60;
+                  else if(indexAleatoire == 1){
+                    print("passage 1");
+                    vraiDuree = vraiDuree + 15;
                   }
-                  else if(player.heureJours! > 5){
-                    dureeTrain = 30;
+                  else{
+                    print("passage else");
+                    vraiDuree = vraiDuree;
                   }
-                  else if(player.heureJours! > 0){
-                    dureeTrain = 15;
-                  }
+                  print("aze");
+                  print(element);
+                  print(vraiDuree);
 
-                  print("duree train");
-                  print(dureeTrain);
-                  List<List<int>> entrainementDuree = [];
+                  if(vraiDuree == 0) vraiDuree=15;
+                  entrainementDuree.add([element,vraiDuree]);
+                });
 
-                  Random random = Random();
-
-                  int vraiDuree = 0;
-                  entrainement.forEach((element) {
-                    int indexAleatoire = random.nextInt(3);
-                    vraiDuree = dureeTrain;
-                    print("index alea");
-                    print(indexAleatoire);
-                    if(indexAleatoire == 0){
-                      vraiDuree = vraiDuree - 15;
-                      print("passage 0");
-                    }
-                    else if(indexAleatoire == 1){
-                      print("passage 1");
-                      vraiDuree = vraiDuree + 15;
-                    }
-                    else{
-                      print("passage else");
-                      vraiDuree = vraiDuree;
-                    }
-                    print("aze");
-                    print(element);
-                    print(vraiDuree);
-
-                    if(vraiDuree == 0) vraiDuree=15;
-                    entrainementDuree.add([element,vraiDuree]);
-                  });
-
-                  print("entrainement duree");
-                  entrainementDuree.forEach((element) {
-                    print(element);
-                  });
-                  player.entrainement = entrainementDuree;
+                print("entrainement duree");
+                entrainementDuree.forEach((element) {
+                  print(element);
+                });
+                player.entrainement = entrainementDuree;
 
 
-                  //Enregistrer le json dans les sharedprefs
-                  savePlayerToSharedPreferences(player);
+                //Enregistrer le json dans les sharedprefs
+                savePlayerToSharedPreferences(player);
 
-                  Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-                    builder: (context) => TransitionPage(),
-                  ),
-                  );
-
-                }, child: Text("Terminer"),
-
+                Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                  builder: (context) => TransitionPage(),
                 ),
-              ),)
+                );
+
+
+              },
+              text: "Terminer",
+              width: MediaQuery.of(context).size.width,
+
+            )
+
           ],
         ),
       ),

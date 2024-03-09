@@ -32,6 +32,38 @@ class _TrainDescriptionState extends State<TrainDescription> {
     super.initState();
   }
 
+  Column buildPointsDescription(TrainingInfo trainingInfo){
+
+    List<Widget> pointsListe = [];
+    List<String> descSplit = trainingInfo.description.split("|");
+    descSplit.forEach((texte) {
+      pointsListe.add(
+        Padding(padding: EdgeInsets.symmetric(vertical: 5),
+        child:  Row(
+          children: [
+            Icon(
+
+              Icons.fiber_manual_record, // Remplacez ceci par l'icône de votre choix
+              color: Colors.white,
+              size: 12,
+            ),
+            SizedBox(width: 10), // Espacement entre l'icône et le texte
+
+            Expanded(child:  Container(
+                child: Text(texte,style: TextStyle(fontSize: 14),
+                )
+            ),)
+
+          ],
+        ),
+        )
+
+      );
+    });
+
+    return Column(children: pointsListe,);
+  }
+
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
@@ -54,9 +86,21 @@ class _TrainDescriptionState extends State<TrainDescription> {
                       SizedBox(height: 10,),
                       Text("Lieu - ${trainingInfo!.lieu}",style: TextStyle(fontSize: 18)),
                       SizedBox(height: 10,),
-                      Image.asset("${trainingInfo!.image}",scale: 3,),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.asset("${trainingInfo!.image}"),
+                        )
+                        ),
+
+
                       SizedBox(height: 20,),
+                      buildPointsDescription(trainingInfo!)
+                      /*
                       Text("${trainingInfo!.description}",textAlign: TextAlign.center,style: TextStyle(fontSize: 18)),
+
+                       */
 
                     ],
                   ),

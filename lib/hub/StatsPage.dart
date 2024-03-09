@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:valorant_trainer/statics/BoutonValorant.dart';
 
 import '../statics/MyLineChart.dart';
 import '../statics/Player.dart';
@@ -272,36 +273,22 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                   ,
 
                   SizedBox(height: 30,)
-
                   ,
-                  Padding(padding: EdgeInsets.all(10)
-                    ,child:  Container(
-                      padding: EdgeInsets.all(5),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-                      child: ElevatedButton(
+                  BoutonValorant(
+                      text: "Modifier",
+                      onTap: (){
+                        final snackBar = SnackBar(
+                          content: Text('Non implémenté'),
+                          duration: Duration(seconds: 2), // Durée du message
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                      ,
+                    color: Color(0xFF52907E),
+                    width: MediaQuery.of(context).size.width,
 
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
 
-                              return Color(0xFF52907E); // Use the component's default.
-                            },
-                          ),
-                        ),
-
-                        onPressed: (){
-
-                          final snackBar = SnackBar(
-                            content: Text('Non implémenté'),
-                            duration: Duration(seconds: 2), // Durée du message
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-                        }, child: Text("Modifier"),
-
-                      ),
-                    ),)
+                  )
 
 
                 ],

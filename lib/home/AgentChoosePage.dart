@@ -3,6 +3,7 @@ import 'package:valorant_trainer/home/TimeChoosePage.dart';
 import '../animations/SlideFadePageRoute.dart';
 import '../animations/SlidePageRoute.dart';
 import '../statics/Agents.dart';
+import '../statics/BoutonValorant.dart';
 import '../statics/Player.dart';
 
 /*
@@ -67,40 +68,36 @@ class _AgentSelectionPageState extends State<AgentSelectionPage> {
               },
             ),
           ),
-          Padding(padding: EdgeInsets.all(10)
-            ,child:  Container(
-              padding: EdgeInsets.all(5),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-              child: ElevatedButton(onPressed: (){
 
-                if(selectedAgents.length >0){
+          BoutonValorant(
+            onTap: () {
 
-                  print(selectedAgents);
+              if(selectedAgents.length >0){
 
-                  player.agents = selectedAgents;
+                print(selectedAgents);
 
-                  Navigator.push(
-                    context,
-                    SlideFadePageRoute(page:TimeChoosePage(player)),
-                  );
-                }
-                else{
+                player.agents = selectedAgents;
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Veuillez sélectionner au moins un agent.'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                }
+                Navigator.push(
+                  context,
+                  SlideFadePageRoute(page:TimeChoosePage(player)),
+                );
+              }
+              else{
 
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Veuillez sélectionner au moins un agent.'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
 
+            },
+            text: "Suivant",
+            width: MediaQuery.of(context).size.width,
 
-              }, child: Text("Suivant"),
-
-              ),
-            ),)
+          )
         ],
       ),
     );

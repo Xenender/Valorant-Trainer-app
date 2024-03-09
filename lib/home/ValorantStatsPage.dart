@@ -3,6 +3,7 @@ import 'package:valorant_trainer/home/AgentChoosePage.dart';
 
 import '../animations/SlideFadePageRoute.dart';
 import '../animations/SlidePageRoute.dart';
+import '../statics/BoutonValorant.dart';
 import '../statics/Player.dart';
 
 class ValorantStatsPage extends StatefulWidget {
@@ -119,31 +120,29 @@ class _ValorantStatsPageState extends State<ValorantStatsPage> {
                   },
                 ),
                 SizedBox(height: 20.0),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Si le formulaire est valide, naviguez vers la page suivante
+                
 
-                          player.kdRatio = [[kdRatio,DateTime.now().toString()]];
-                          player.headShot = [[headshotPercentage,DateTime.now().toString()]];
-                          player.win = [[winPercentage,DateTime.now().toString()]];
-                          player.damageRound = [[damagesPerRound,DateTime.now().toString()]];
+                BoutonValorant(
+                  onTap: () {
 
-                          Navigator.push(
-                            context,
-                            SlideFadePageRoute(page: AgentSelectionPage(player)),
-                          );
-                        }
-                      },
-                      child: Text("Suivant"),
-                    ),
-                  ),
+                    if (_formKey.currentState!.validate()) {
+                      // Si le formulaire est valide, naviguez vers la page suivante
+
+                      player.kdRatio = [[kdRatio,DateTime.now().toString()]];
+                      player.headShot = [[headshotPercentage,DateTime.now().toString()]];
+                      player.win = [[winPercentage,DateTime.now().toString()]];
+                      player.damageRound = [[damagesPerRound,DateTime.now().toString()]];
+
+                      Navigator.push(
+                        context,
+                        SlideFadePageRoute(page: AgentSelectionPage(player)),
+                      );
+                    }
+
+                  },
+                  text: "Suivant",
+                  width: MediaQuery.of(context).size.width,
+
                 )
               ],
             ),

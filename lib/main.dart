@@ -1,11 +1,21 @@
+import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:valorant_trainer/home/HomePage.dart';
 import 'package:valorant_trainer/themes/ThemeValo.dart';
+import 'package:flutter/services.dart';
+
 
 import 'hub/Hub.dart';
 
 void main() {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
+
   runApp(const MyApp());
 }
 
@@ -19,19 +29,27 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Valorant Trainer',
       theme: AppTheme.themeValo,
-      home: FutureBuilder<Widget>(
-        future: chooseFirstPage(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // En attendant la résolution de la future
-          } else if (snapshot.hasError) {
-            print('Erreur : ${snapshot.error}');
-            return Center(child: Text("Erreur, veuillez relancer l'application"),);
-          } else {
-            return snapshot.data??Center(child: Text("Erreur, veuillez relancer l'application"));
-          }
-        },
-      ),
+      home:
+
+          DoubleBack(
+            message: "Appuyez à nouveau pour quitter l'application",
+            textStyle: TextStyle(fontSize: 17,color: Colors.white),
+            child:  FutureBuilder<Widget>(
+              future: chooseFirstPage(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // En attendant la résolution de la future
+                } else if (snapshot.hasError) {
+                  print('Erreur : ${snapshot.error}');
+                  return Center(child: Text("Erreur, veuillez relancer l'application"),);
+                } else {
+                  return snapshot.data??Center(child: Text("Erreur, veuillez relancer l'application"));
+                }
+              },
+            ),
+          )
+
+     ,
     );
   }
 

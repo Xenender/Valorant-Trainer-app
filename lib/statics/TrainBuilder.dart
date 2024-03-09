@@ -348,6 +348,11 @@ class TrainBuilder {
 
 
       int indexAleatoire = random.nextInt(trainingList.length);
+      if(entrainement.length>=2){
+        while(entrainement[entrainement.length-1] == indexAleatoire  || entrainement[entrainement.length-2] == indexAleatoire){
+          indexAleatoire = random.nextInt(trainingList.length);
+        }
+      }
       entrainement.add(indexAleatoire);
 
     }

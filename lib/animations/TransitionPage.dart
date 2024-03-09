@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:valorant_trainer/home/HomePage.dart';
 import 'package:valorant_trainer/hub/Hub.dart';
@@ -44,7 +45,16 @@ class _TransitionPageState extends State<TransitionPage> {
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => Hub()),
+            MaterialPageRoute(builder: (context) =>
+
+              DoubleBack(
+                  message: "Appuyez à nouveau pour quitter l'application",
+                  textStyle: TextStyle(fontSize: 17,color: Colors.white),
+                  child:Hub()
+              )
+
+
+            ),
 
           );
         }

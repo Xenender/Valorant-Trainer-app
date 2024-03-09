@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:valorant_trainer/global/GlobalVariable.dart';
+import 'package:valorant_trainer/statics/BoutonValorant.dart';
 
 import '../animations/ScrollBehavior1.dart';
 import '../statics/Player.dart';
@@ -96,55 +97,30 @@ class _HubMainState extends State<HubMain> {
 
                     SizedBox(height: 5,),
 
-                    GestureDetector(
-                      onTap: (){
+                    BoutonValorant(
+                        text: "Completer jour ${player.dayActu!+1}",
+                        onTap: (){
+                          int newDayActu = player.dayActu!+1;
+                          if(newDayActu < player.dayBeforeGoal!){
+                            setState(() {
+                              player.dayActu = newDayActu;
+                              savePlayerToSharedPreferences(player);
+                            });
+                          }
+                          else if (newDayActu == player.dayBeforeGoal){
 
-                        int newDayActu = player.dayActu!+1;
-                        if(newDayActu < player.dayBeforeGoal!){
-                          setState(() {
-                            player.dayActu = newDayActu;
-                            savePlayerToSharedPreferences(player);
-                          });
-                        }
-                        else if (newDayActu == player.dayBeforeGoal){
-
-                        }
-
-
-                      },
-                      child: Padding(padding: EdgeInsets.only(top: 10),
-                        child:
-                        Container(
-                          width: MediaQuery.of(context).size.width*0.9,
-                          height: 50,
-                          color: Color(0xFF52907E), //borderRadius: BorderRadius.circular(10)
-
-                          child: Padding(
-                              padding: EdgeInsets.all(4.0),
-                              child:
-                              Container(
-                                padding: EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Color(0xCDFFFFFF))),
-                                child:  Text(
-                                  "Completer jour ${player.dayActu!+1}",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontFamily: "Valorant"
-                                  ),
-                                ),
-                              )
+                          }
+                        },
+                      color: Color(0xFF52907E),
+                      width: MediaQuery.of(context).size.width*0.9,
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: "Valorant"
+                      ),
 
 
-                          ),
-                        )
-                        ,),
-                    )
-
-
-                    ,
+                    ),
 
                     SizedBox(height: 80,)
 
@@ -165,9 +141,11 @@ class _HubMainState extends State<HubMain> {
 
   Column buildJourEntrainement(int numeroTraining,TrainingInfo trainingInfo,Player player){
 
-    List<Color> colors = [Color(0xFF0596F2),Color(0xFFF2994B),Color(0xFFF27A5E),Color(0xFFF24949),Color(0xFFF24949),Color(0xFFF24949),Color(0xFFF24949)];
+    List<Color> colors = [Color(0xFF5EBEF2),Color(0xFFF2C35E),Color(0xFFF27A5E),Color(
+        0xFFF24949),Color(0xFFF25EE6),Color(0xFFBC5EF2),Color(
+        0xFF6D5EF2)];
 
-
+    String linkImageType = typeToShow(trainingInfo.type);
 
 
     return Column(
@@ -203,8 +181,7 @@ class _HubMainState extends State<HubMain> {
           },
 
           child: Container(
-            padding: EdgeInsets.only(top: 20,bottom:0),
-            height: 200,
+            padding: EdgeInsets.only(top: 20,bottom:20),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: colors[numeroTraining % player.joursSemaine!],
@@ -215,7 +192,8 @@ class _HubMainState extends State<HubMain> {
                 Text("${trainingInfo.titre}",style: TextStyle(fontSize: 22,fontFamily: "Valorant"),textAlign: TextAlign.center,),
                 Text("Durée - ${player.entrainement![numeroTraining][1]}min",style: TextStyle(fontSize: 19)),
                 Text("Lieu - ${trainingInfo.lieu}",style: TextStyle(fontSize: 18)),
-                Image.asset("${trainingInfo.image}",scale: 3.5,)
+                SizedBox(height: 20,),
+                Image.asset("assets/types/${linkImageType}.png",scale: 6,color: Colors.white,)
               ],
             ),
           ),

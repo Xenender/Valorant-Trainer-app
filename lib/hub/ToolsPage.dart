@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:valorant_trainer/home/HomePage.dart';
+import 'package:valorant_trainer/statics/BoutonValorant.dart';
 
 import '../statics/Player.dart';
 
@@ -28,89 +29,65 @@ class _ToolsPageState extends State<ToolsPage> {
     return Scaffold(
 
         body: Padding(
-          padding: EdgeInsets.symmetric(vertical: 100,horizontal: 20),
+          padding: EdgeInsets.symmetric(vertical: 80,horizontal: 20),
           child: Column(
             children: [
 
-              Padding(padding: EdgeInsets.all(10)
-                ,child:  Container(
-                  padding: EdgeInsets.all(5),
+              Text("Parametres",style: TextStyle(fontSize: 30,fontFamily: "Valorant"),textAlign: TextAlign.center,),
+
+              SizedBox(height: 20,),
+              Padding(padding: EdgeInsets.symmetric(horizontal: 50),child: Divider()),
+              SizedBox(height: 20,) ,
+
+                BoutonValorant(
+                  onTap: () async {
+                    final Uri url = Uri.https(
+                      "privacy-policy-d508b.web.app",
+                    );
+                    try{
+                      await launchUrl(url);
+                    }
+                    catch(e){
+                      print("erreur ed lancement du site !!!!");
+                      print(e);
+                    }
+
+
+                  },
+                  text: "Politique de confidentialité",
+                  color: Color(0xFF52907E),
                   width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
 
-                          return Color(0xFF52907E); // Use the component's default.
-                        },
-                      ),
-                    ),
-                    onPressed: () async {
+                )
+                  ,
 
-                      final Uri url = Uri.https(
-                        "privacy-policy-d508b.web.app",
-                      );
-                      try{
-                        await launchUrl(url);
-                      }
-                      catch(e){
-                        print("erreur ed lancement du site !!!!");
-                        print(e);
-                      }
+              BoutonValorant(
+                onTap: () {
+                  final snackBar = SnackBar(
+                    content: Text('Non implémenté'),
+                    duration: Duration(seconds: 2), // Durée du message
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
+                },
+                text: "Suivez-nous",
+                color: Color(0xFF52907E),
+                width: MediaQuery.of(context).size.width,
 
-                    }, child: Text("politique de confidentialité"),
-
-                  ),
-                ),)
+              )
               ,
 
-              Padding(padding: EdgeInsets.all(10)
-                ,child:  Container(
-                  padding: EdgeInsets.all(5),
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-                  child: ElevatedButton(
+              BoutonValorant(
+                onTap: () {
 
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
+                  _showDeleteConfirmationDialog(context);
 
-                          return Color(0xFF52907E); // Use the component's default.
-                        },
-                      ),
-                    ),
+                },
+                text: "Réinitialiser le programme d'entrainement",
+                width: MediaQuery.of(context).size.width,
 
-                    onPressed: (){
-
-                      final snackBar = SnackBar(
-                        content: Text('Non implémenté'),
-                        duration: Duration(seconds: 2), // Durée du message
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-                  }, child: Text("Suivez-nous"),
-
-                  ),
-                ),)
-
+              )
               ,
-
-              Padding(padding: EdgeInsets.all(10)
-                ,child:  Container(
-                  padding: EdgeInsets.all(5),
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-                  child: ElevatedButton(onPressed: () {
-
-                    _showDeleteConfirmationDialog(context);
-
-
-                  }, child: Text("Réinitialiser le programme d'entrainement",textAlign: TextAlign.center,),
-
-                  ),
-                ),)
 
             ],
           ),
@@ -168,3 +145,4 @@ class _ToolsPageState extends State<ToolsPage> {
   }
 
 }
+

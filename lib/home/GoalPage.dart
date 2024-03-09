@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:valorant_trainer/animations/SlidePageRoute.dart';
 import '../animations/SlideFadePageRoute.dart';
+import '../statics/BoutonValorant.dart';
 import '../statics/Player.dart';
 import '../statics/Ranks.dart' as ranks;
 import 'ValorantStatsPage.dart';
@@ -25,6 +26,19 @@ class _GoalPageState extends State<GoalPage> {
   int indexChoose = 0;
   Player player;
   _GoalPageState(this.player);
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: indexChoose);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,37 +63,67 @@ class _GoalPageState extends State<GoalPage> {
               children: [
                 SizedBox(height: 30),
                 Text("Quel est votre objectif ?",style: TextStyle(fontSize: 30),textAlign: TextAlign.center,),
+
                 Expanded(
-                  child: PageView.builder(
-                    itemCount: ranksSup.length,
-                    itemBuilder: (context, index) {
-                      return ImageView(ranksSup[index+player.rankActu!+1]!);
-                    },
-                    onPageChanged: (index){
-                      indexChoose = index+player.rankActu!+1;
-                    },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      PageView.builder(
+                        controller: _pageController,
+                        itemCount: ranksSup.length,
+                        itemBuilder: (context, index) {
+                          return ImageView(ranksSup[index+player.rankActu!+1]!);
+                        },
+                        onPageChanged: (index) {
+                          setState(() {
+                            indexChoose = index+player.rankActu!+1;
+                          });
+                        },
+                      ),
+                      Positioned(
+                        left: 20,
+                        child: (indexChoose > player.rankActu!+1) ?
+                        IconButton(
+                          onPressed: () {
+                            _pageController.previousPage(
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          },
+                          icon: Icon(Icons.arrow_left,size: 40,),
+                        ):Container(),
+                      ),
+                      Positioned(
+                        right: 20,
+                        child: (indexChoose < ranks.rankList.length - 1) ?
+                        IconButton(
+                          onPressed: () {
+                            _pageController.nextPage(
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          },
+                          icon: Icon(Icons.arrow_right,size: 40,),
+                        ):Container(),
+                      ),
+                    ],
                   ),
                 ),
 
-                Padding(padding: EdgeInsets.all(10)
-                  ,child:  Container(
-                    padding: EdgeInsets.all(5),
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(border: Border.all(color: Colors.white)),
-                    child: ElevatedButton(onPressed: (){
+                BoutonValorant(
+                  onTap: () {
 
-                      if(indexChoose == 0){
-                        indexChoose = player.rankActu!+1;
-                      }
-                      player.rankGoal = indexChoose;
+                    if(indexChoose == 0){
+                      indexChoose = player.rankActu!+1;
+                    }
+                    player.rankGoal = indexChoose;
 
-                      print("${player.rankActu} |  ${player.rankGoal}");
-                      Navigator.push(context, SlideFadePageRoute(page: ValorantStatsPage(player)));
+                    print("${player.rankActu} |  ${player.rankGoal}");
+                    Navigator.push(context, SlideFadePageRoute(page: ValorantStatsPage(player)));
 
-                    }, child: Text("Suivant"),
+                  },
+                  text: "Suivant",
+                  width: MediaQuery.of(context).size.width,
 
-                    ),
-                  ),)
+                )
 
               ],
             ),
