@@ -1,3 +1,7 @@
+
+import 'package:flutter/material.dart';
+import 'package:valorant_trainer/reactionTime/ReactionTest.dart';
+
 class TrainingInfo {
   final String titre;
   final String lieu;
@@ -12,6 +16,16 @@ class TrainingInfo {
 
 
 }
+class DefiInfo {
+  final String titre;
+  final String type;
+  final String image;
+  final Widget page;
+
+
+  DefiInfo({required this.titre, required this.type, required this.image,required this.page});
+}
+
 
 String typeToShow(String type){
   List<String> typeSplit = type.split("/");
@@ -73,6 +87,13 @@ List<List<String>> difficulyList =
   ["Moyen","assets/difficulty/moyen.png"],
   ["Difficile","assets/difficulty/difficile.png"],
   ["Expert","assets/difficulty/expert.png"],
+];
+
+List<DefiInfo> defiQuotidienList=
+[
+  DefiInfo(titre: "Temps de reaction", type: "Reaction", image: "assets/types/reaction.png",page: ReactionTest()),
+  DefiInfo(titre: "Temps de reaction", type: "Reaction", image: "assets/types/reaction.png",page: ReactionTest()),
+  DefiInfo(titre: "Temps de reaction", type: "Reaction", image: "assets/types/reaction.png",page: ReactionTest())
 ];
 
 Map<int,TrainingInfo> trainingList =

@@ -19,6 +19,8 @@ class Player {
 
    List<List<dynamic>>? entrainement;
 
+   List<bool?>? defiValide;
+
    Player({
       this.rankActu,
       this.rankGoal,
@@ -33,7 +35,8 @@ class Player {
       this.weakness,
       this.dayBeforeGoal,
       this.dayActu,
-      this.entrainement
+      this.entrainement,
+      this.defiValide
 
    });
 
@@ -53,7 +56,8 @@ class Player {
          'weakness':weakness,
          'dayBeforeGoal':dayBeforeGoal,
          'dayActu':dayActu,
-         'entrainement':entrainement
+         'entrainement':entrainement,
+         'defiValide':defiValide
       };
    }
 
@@ -74,6 +78,7 @@ class Player {
           dayBeforeGoal: json['dayBeforeGoal'],
           dayActu: json['dayActu'],
          entrainement: json['entrainement']!= null ? List<List<dynamic>>.from(json['entrainement']) : null,
+         defiValide: json['defiValide']!= null ? List<bool?>.from(json['defiValide']) : null,
 
       );
    }

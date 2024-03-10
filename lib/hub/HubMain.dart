@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:valorant_trainer/global/GlobalVariable.dart';
+import 'package:valorant_trainer/hub/DefiDescription.dart';
+import 'package:valorant_trainer/reactionTime/ReactionTest.dart';
 import 'package:valorant_trainer/statics/BoutonValorant.dart';
 
 import '../animations/ScrollBehavior1.dart';
+import '../animations/SlideFadePageRoute.dart';
+import '../home/ValorantStatsPage.dart';
 import '../statics/Player.dart';
 
 import '../statics/Ranks.dart';
@@ -93,6 +97,13 @@ class _HubMainState extends State<HubMain> {
                     Padding(padding: EdgeInsets.symmetric(horizontal: 50),child: Divider()),
                     SizedBox(height: 15,),
 
+                    buildDefiQuotidien(player),
+
+                    SizedBox(height: 15,),
+
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 50),child: Divider()),
+
+
                     buildJourEntrainement(player.dayActu!,trainingList[player.entrainement![player.dayActu!][0]]!, player),
 
                     SizedBox(height: 5,),
@@ -100,16 +111,48 @@ class _HubMainState extends State<HubMain> {
                     BoutonValorant(
                         text: "Completer jour ${player.dayActu!+1}",
                         onTap: (){
-                          int newDayActu = player.dayActu!+1;
-                          if(newDayActu < player.dayBeforeGoal!){
-                            setState(() {
-                              player.dayActu = newDayActu;
-                              savePlayerToSharedPreferences(player);
-                            });
-                          }
-                          else if (newDayActu == player.dayBeforeGoal){
+
+                          if(player.defiValide![player.dayActu!] == null){
+                            //show êtes vous sur ?
+
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Continuer ?'),
+                                  content: Text(
+                                      "Vous n'avez pas complété le défi quotidien, voulez-vous continuer ?"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('Retour'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('Continuer'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+
+                                        player.defiValide![player.dayActu!] =false;
+                                        savePlayerToSharedPreferences(player);
+                                        validerJour(player);
+
+                                      },
+                                    ),
+
+                                  ],
+                                );
+                              },
+                            );
+
 
                           }
+                          else{
+                            validerJour(player);
+                          }
+
                         },
                       color: Color(0xFF52907E),
                       width: MediaQuery.of(context).size.width*0.9,
@@ -137,6 +180,19 @@ class _HubMainState extends State<HubMain> {
 
 
 
+  }
+
+  void validerJour(Player player){
+    int newDayActu = player.dayActu!+1;
+    if(newDayActu < player.dayBeforeGoal!){
+      setState(() {
+        player.dayActu = newDayActu;
+        savePlayerToSharedPreferences(player);
+      });
+    }
+    else if (newDayActu == player.dayBeforeGoal){
+
+    }
   }
 
   Column buildJourEntrainement(int numeroTraining,TrainingInfo trainingInfo,Player player){
@@ -194,6 +250,66 @@ class _HubMainState extends State<HubMain> {
                 Text("Lieu - ${trainingInfo.lieu}",style: TextStyle(fontSize: 18)),
                 SizedBox(height: 20,),
                 Image.asset("assets/types/${linkImageType}.png",scale: 6,color: Colors.white,)
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+
+  }
+
+  Column buildDefiQuotidien(Player player){
+
+    int numeroDefi = player.dayActu! % defiQuotidienList.length;
+
+    return Column(
+      children: [
+        Padding(padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),child: Row(mainAxisAlignment: MainAxisAlignment.start,children: [Text("Defi quotidien",style: TextStyle(fontSize: 20),)],))
+        ,
+        GestureDetector(
+          onTap: () {
+
+            showModalBottomSheet(
+              backgroundColor: Color(0xFF0F1923),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30.0),
+                ),
+              ),
+              context: context,
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.70,
+              ),
+              isScrollControlled: true,
+              builder: (context) {
+
+                GlobalVariable.toolContext = context;
+
+                return ScrollConfiguration(
+                  behavior: ScrollBehavior1(),
+                  child: DefiDescription(player,numeroDefi),
+                );
+              },
+            ).then((value) => GlobalVariable.toolContext=null);
+
+
+          },
+
+          child: Container(
+            padding: EdgeInsets.only(top: 20,bottom:20),
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: player.defiValide![player.dayActu!] == null ? Color(0xFFFD4554) : Color(0xFF52907E),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                Text("${defiQuotidienList[numeroDefi].titre}",style: TextStyle(fontSize: 20,fontFamily: "Valorant"),textAlign: TextAlign.center,),
+                player.defiValide![player.dayActu!] == null ? Text("Non complété",style: TextStyle(fontSize: 17)) : Text("Complété",style: TextStyle(fontSize: 17)),
+
+                SizedBox(height: 5,),
+                Image.asset("${defiQuotidienList[numeroDefi].image}",scale: 8,color: Colors.white,)
               ],
             ),
           ),

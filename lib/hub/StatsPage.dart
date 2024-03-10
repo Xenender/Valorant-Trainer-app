@@ -32,7 +32,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
     return null;
   }
 
-  late Player player;
+  Player? player;
 
   late AnimationController _controller;
   late Animation<double> _animationHeadShot;
@@ -45,6 +45,8 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
   double _currentPercentageWin = 0.0; // La valeur actuelle du pourcentage
   double _currentPercentageDamage = 0.0; // La valeur actuelle du pourcentage
 
+  int? maxSemaine;
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +55,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
       vsync: this,
       duration: Duration(seconds: 1), // Durée de l'animation (2 secondes dans cet exemple)
     );
+
 
     LoadAndLaunchAnimations();
 
@@ -66,13 +69,18 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
   void LoadAndLaunchAnimations() async {
 
-      Player player = await getPlayerFromSharedPreferences() ?? Player(kdRatio: [[0]],damageRound: [[0]],win: [[0]],headShot: [[0]]);
+    player = await getPlayerFromSharedPreferences() ?? Player(kdRatio: [[0]],damageRound: [[0]],win: [[0]],headShot: [[0]]);
 
     //init animation
 
+    setState(() {
+      maxSemaine = player!.dayBeforeGoal! ~/ player!.joursSemaine!;
+
+    });
+
     _animationHeadShot = Tween<double>(
       begin: 0.0,
-      end: player.headShot![player.headShot!.length-1][0],
+      end: player!.headShot![player!.headShot!.length-1][0],
     ).animate(_controller)
       ..addListener(() {
         setState(() {
@@ -82,7 +90,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
     _animationKdRatio = Tween<double>(
       begin: 0.0,
-      end: player.kdRatio![player.kdRatio!.length-1][0],
+      end: player!.kdRatio![player!.kdRatio!.length-1][0],
     ).animate(_controller)
       ..addListener(() {
         setState(() {
@@ -92,7 +100,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
     _animationWin = Tween<double>(
       begin: 0.0,
-      end: player.win![player.win!.length-1][0],
+      end: player!.win![player!.win!.length-1][0],
     ).animate(_controller)
       ..addListener(() {
         setState(() {
@@ -102,7 +110,7 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
     _animationDamage = Tween<double>(
       begin: 0.0,
-      end: player.damageRound![player.damageRound!.length-1][0],
+      end: player!.damageRound![player!.damageRound!.length-1][0],
     ).animate(_controller)
       ..addListener(() {
         setState(() {
@@ -124,7 +132,6 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-
 
       return Scaffold(
 
@@ -288,10 +295,53 @@ class _StatsPageState extends State<StatsPage> with SingleTickerProviderStateMix
                     width: MediaQuery.of(context).size.width,
 
 
-                  )
+                  ),
+
+                  SizedBox(height: 30,),
+
+                  Text("Defis quotidiens",style: TextStyle(fontSize: 30,fontFamily: "Valorant"),textAlign: TextAlign.center,),
+
+                  SizedBox(height: 20,),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: 50),child: Divider()),
+                  SizedBox(height: 20,) ,
+
+              maxSemaine != null ?
+
+              Table(
+                border: TableBorder.all(color: Colors.white), // Bordures du tableau
+                children: List.generate(maxSemaine!+1, (i) {//nb de semaines
+                  return TableRow(
+                    children: List.generate(player!.joursSemaine!, (j) {//nb de jours par semaines
+                      final index = i * player!.joursSemaine! + j;
+                      bool? value;
+                      try{
+                        value = (player!.defiValide??[])[index];
+                      }
+                      catch (e){
+                        value = null;
+                      }
+
+                      return TableCell(
+                        child: Container(
+                          padding: EdgeInsets.all(8.0),
+                          child: Center(
+                            child: value == null
+                                ? Text('${index+1}',style: TextStyle(color: index+1 <= player!.dayBeforeGoal! ? Colors.white : Colors.grey),) // Afficher le numéro de la case
+                                : value
+                                ? Icon(Icons.check, color: Color(0xFF52907E)) // Coche verte si true
+                                : Icon(Icons.close, color: Color(0xFFFD4554)), // Croix rouge si false
+                          ),
+                        ),
+                      );
+                    }),
+                  );
+                }),
+              )
+
+                  : CircularProgressIndicator()
 
 
-                ],
+              ],
               )
               ,
             ),

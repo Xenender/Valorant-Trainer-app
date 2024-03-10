@@ -11,6 +11,7 @@ class BoutonValorant extends StatelessWidget {
   final double width;
   final double height;
   final Function onTap;
+  final bool enabled;
 
   const BoutonValorant({
     required this.text,
@@ -20,20 +21,21 @@ class BoutonValorant extends StatelessWidget {
     this.width = 200.0,
     this.height = 50.0,
     required this.onTap,
+    this.enabled = true
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        this.onTap();
+        if(enabled) this.onTap();
       },
       child: Padding(padding: EdgeInsets.all(10),
         child:
         Container(
           width: this.width,
           decoration: BoxDecoration(
-              color: this.color,
+              color: enabled ? this.color : Color(0xFFcccccc),
 
               borderRadius: BorderRadius.circular(15)
           ),

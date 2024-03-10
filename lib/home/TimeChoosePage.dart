@@ -166,6 +166,8 @@ class _TimeChoosePageState extends State<TimeChoosePage> {
                 });
                 player.entrainement = entrainementDuree;
 
+                List<bool?> lstDefi = List.filled(player.dayBeforeGoal!, null);
+                player.defiValide = lstDefi;
 
                 //Enregistrer le json dans les sharedprefs
                 savePlayerToSharedPreferences(player);
